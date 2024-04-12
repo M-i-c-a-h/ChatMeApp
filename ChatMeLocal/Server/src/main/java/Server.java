@@ -45,7 +45,6 @@ public class Server{
 				callback.accept("new client has connected to server: " + "client #" + count);
 				clients.add(c);
 				c.start();
-				count++;
 
 			    }
 			}//end of try
