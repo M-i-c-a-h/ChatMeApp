@@ -63,8 +63,6 @@ public class Server{
 
 			String clientID;
 
-			//todo: client name
-
 			ObjectInputStream in;
 			ObjectOutputStream out;
 
@@ -73,10 +71,10 @@ public class Server{
 				this.count = count;			// client who?
 			}
 
-			//todo: update clients general
+			//update clients
 			public void updateClients(Message newMessage) {
 
-				// if message is to 1 user send to user
+				// if message is to a private user send to user
 				if(newMessage.secreteMessage){
 					for (ClientThread t : clients) {
 						if(Objects.equals(newMessage.recipient,t.clientID)){
@@ -102,22 +100,18 @@ public class Server{
 				}
 			}
 
-			//todo: update clients secret message
-
 			public void run() {
 				try {
 					in = new ObjectInputStream(connection.getInputStream());
 					out = new ObjectOutputStream(connection.getOutputStream());
 					connection.setTcpNoDelay(true);
 					validateUserName();
-					//todo: let everyone know user is now online
 
 				}
 				catch (IOException e) {
 					// Handle any exceptions related to socket I/O
 					System.out.println("Streams not open");
 				}
-
 
 					// Process client messages
 					while (true) {
@@ -145,13 +139,14 @@ public class Server{
 								}
 							}
 							else{
-								// Update server && clients with the received message		//todo: set sender
+								// Update server && clients with the received message
 								callback.accept("client: " + clientID + " sent: " + clientMessage.MessageInfo);
 								System.out.println("Sending message to: "+ clientMessage.recipient);
+
 								String messageCopy = clientMessage.MessageInfo;
 								clientMessage.MessageInfo = clientID + " said: " + clientMessage.MessageInfo;
 								clientMessage.userID = clientID;
-								//todo: here i update userNames
+								// update userNames for clients
 								synchronized (listOfClientsID) {
 									clientMessage.userNames = new HashSet<>(listOfClientsID);
 								}
@@ -161,6 +156,7 @@ public class Server{
 										Message messageToSender = clientMessage;
 										messageToSender.MessageInfo = "\t\t\t\t\t\t\t\t\t\t\tYou said: " + messageCopy;
 										messageToSender.userID = messageToSender.recipient;
+										messageToSender.newUser = true;
 										out.writeObject(messageToSender);
 									}
 								}
@@ -194,7 +190,9 @@ public class Server{
 					}
 
 			}
-
+			public void validateUserName() {
+				sendUserNames();
+			}
 			public void sendUserNames() {
 				synchronized (listOfClientsID){
 					try {
@@ -210,10 +208,6 @@ public class Server{
 
 			}
 
-
-			public void validateUserName() {
-				sendUserNames();
-			}
 			
 		}//end of client thread
 }

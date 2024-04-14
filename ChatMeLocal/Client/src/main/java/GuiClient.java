@@ -82,7 +82,7 @@ public class GuiClient extends Application{
 								newChat = false;
 							}
 
-							if(message.userNames.size() == 1){
+							if(message.userNames.size() == 1 || usersOnline.getValue() == null){
 								usersOnline.setValue("Users Online");
 							}
 						}
@@ -100,11 +100,11 @@ public class GuiClient extends Application{
 		joinChat = new Button("Join chat");
 
 		Chat.put("Users Online", new ArrayList<>());
-		//todo: update clients sends info
+		// send info to server
 		sendButton.setOnAction(e->{
 			SendMessage();
 		});
-
+		// send info to server
 		textBox.setOnAction(e->{
 			SendMessage();
 		});
@@ -112,12 +112,12 @@ public class GuiClient extends Application{
 		joinChat.setOnAction(e -> {
 			String userID = textFieldID.getText();
 			if(userID != null) {
-				boolean joined = clientConnection.joinChat(userID); //todo: can this help????
+				boolean joined = clientConnection.joinChat(userID);
 				Platform.runLater(() -> {
 					if (joined) {
 						System.out.println("Username good... adding to chat");
 						currentUser.setText("User: " + clientConnection.clientID);
-						primaryStage.setScene(sceneMap.get("client"));		//todo: send welcome to notify all users client is online?
+						primaryStage.setScene(sceneMap.get("client"));
 
 					} else {
 						System.out.println("username already exists");
@@ -152,7 +152,6 @@ public class GuiClient extends Application{
 		usersOnline.getItems().clear();
 		usersOnline.getItems().add("Users Online");
 		for(String user : message.userNames){
-			//if(user.equals(clientConnection.clientID)){continue;}
 			usersOnline.getItems().add(user);
 		}
 		usersOnline.setValue("Users Online");
@@ -340,7 +339,6 @@ public class GuiClient extends Application{
 			usersOnline.setValue("Users Online");
 			return;
 		}
-		System.out.println(lastChatScreen);
 		usersOnline.setValue(lastChatScreen);
 	}
 

@@ -40,26 +40,23 @@ public class Client extends Thread{
 		while(true) {
 
 			try {
-				//todo: update clients did something
+				// update gui ->on clients operation
 			ReceivedMessage = (Message)in.readObject();
-
-			//localList.addAll(Received.userNames); //todo: works as expected but joined chatNot Working
 			callback.accept(ReceivedMessage);
 			}
 			catch(Exception e) {
-				//callback.accept("Error in client stream");
+
 			}
 		}
 
     }
 
-	//todo:  clients sends a message
+	// clients sends a message
 	public void send(Message newMessage) {
 
 		try {
 			out.writeObject(newMessage);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Error in sending message");
 			e.printStackTrace();
 		}
@@ -75,19 +72,11 @@ public class Client extends Thread{
 				message.userID = userID;
 				clientID = userID;
 				message.newUser = true;
-				System.out.println("Success");
-				//localList = message.userNames; // todo: can take off
 
 				// send message to server
 				out.writeObject(message);
 				System.out.println("sent Success");
 				return true;
-			}
-			else{
-////				message.success = false;
-//				out.writeObject(message);
-//				System.out.println("sent failed");
-
 			}
 
 		}
