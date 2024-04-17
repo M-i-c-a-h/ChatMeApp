@@ -51,7 +51,7 @@ public class GuiClient extends Application{
 
 
 						// update chat
-						if(message.userNames != null){  //todo take this off
+						if(message.userNames != null){
 							if(!Objects.equals(message.userID, clientConnection.clientID) && !message.newUser){
 								newChat = true;
 								sender = message.userID;
